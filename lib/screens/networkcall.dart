@@ -33,6 +33,5 @@ class _SimpleNetworkCallState extends State<SimpleNetworkCall> {
     String url = "https://jsonplaceholder.typicode.com/posts";
     Response res = await get(url);
     print(res.body);
-    
   }
 }
