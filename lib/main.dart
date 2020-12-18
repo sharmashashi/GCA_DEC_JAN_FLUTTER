@@ -1,10 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:fluttergca/screens/firstpage.dart';
-import 'package:fluttergca/screens/networkcall.dart';
-import 'package:fluttergca/screens/secondpage.dart';
-import 'package:fluttergca/screens/thirdpage.dart';
+import 'package:fluttergca/screens/detailedPage.dart';
+import 'package:fluttergca/screens/homePage.dart';
 
 void main() {
   runApp(MyApp());
@@ -15,13 +13,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     print("");
     return MaterialApp(
-      routes: {
-        "/secondPage": (context) => SecondPage(),
-        "/thirdPage": (context) => ThirdPage(),
-        "/firstPage": (context) => FirstPage(),
-      },
+      routes: {"/details": (context) => DetailedPage()},
       debugShowCheckedModeBanner: false,
-      home: SimpleNetworkCall(),
+      home: HomePage(),
     );
   }
 }
