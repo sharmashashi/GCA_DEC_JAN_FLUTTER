@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:fluttergca/screens/detailedPage.dart';
-import 'package:fluttergca/screens/homePage.dart';
+import 'package:fluttergca/screens/counter/counterView.dart';
+import 'package:get/get.dart';
 
 void main() {
   runApp(MyApp());
@@ -11,11 +11,9 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    print("");
-    return MaterialApp(
-      routes: {"/details": (context) => DetailedPage()},
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: HomePage(),
+      home: CounterApp(),
     );
   }
 }
