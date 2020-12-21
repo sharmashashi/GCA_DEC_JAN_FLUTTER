@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:fluttergca/screens/counter/counterView.dart';
+import 'package:fluttergca/screens/homepage/homepage.dart';
+import 'package:fluttergca/screens/stoptime/stoptime.dart';
 import 'package:get/get.dart';
 
 void main() {
@@ -13,7 +14,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: CounterApp(),
+      home: StopTime(),
     );
   }
 }

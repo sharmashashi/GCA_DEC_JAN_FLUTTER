@@ -24,6 +24,7 @@ dependencies:
   slider_button: ^0.6.0
   http: ^0.12.2
   get: ^3.10.0
+  shared_preferences: ^0.5.12+4
   flutter:
     sdk: flutter
 
