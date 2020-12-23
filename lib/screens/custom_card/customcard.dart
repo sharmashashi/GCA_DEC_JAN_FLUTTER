@@ -64,7 +64,7 @@ class CustomCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                Text("Facebook App",
+                Text(feedModel.pagename,
                     style: TextStyle(
                         fontWeight: FontWeight.bold, color: Colors.black)),
                 Padding(

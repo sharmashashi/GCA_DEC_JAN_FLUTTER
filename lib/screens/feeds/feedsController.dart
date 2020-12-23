@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:fluttergca/api/api.dart';
 import 'package:fluttergca/models/feedmodel.dart';
+import 'package:fluttergca/models/jsonplaceholdermodel.dart';
 import 'package:fluttergca/screens/custom_card/customcard.dart';
-import 'package:get/state_manager.dart';
+import 'package:fluttergca/screens/detailed_page/detailed_page.dart';
+import 'package:get/get.dart';
 
 class FeedsController extends GetxController {
-  String _descriptionText =
-      "Pamper your pooch. The Bark Shoppe is a pet care facility in New York offering grooming products and makeovers with your pet's individual needs in mind. Take a look and shop now to #BuyBlack:";
   String _link = "https://bit.ly/BarkShoppe #LiftBlackVoices";
   String _hashtag = "#MoreTogether";
 
@@ -14,10 +15,8 @@ class FeedsController extends GetxController {
   String _shares = "187";
 
   FeedsController() {
-    init();
+    refresh();
   }
-
-  
 
   List<Widget> _cards = [
     Center(
@@ -26,24 +25,30 @@ class FeedsController extends GetxController {
   ];
   List<Widget> get cards => _cards;
 
-  init() async {
+  Future<void> refresh() async {
     await _loadCards();
     update();
   }
 
   List<Widget> tempList = List();
   Future<void> _loadCards() async {
-    await Future.delayed(Duration(seconds: 2));
-    for (int i = 0; i < 10; i++) {
+    // await Future.delayed(Duration(seconds: 2));
+    List<JsonPlaceholderModel> modelList = await API.fetchPost();
+    for (int i = 0; i < modelList.length; i++) {
       FeedModel model = FeedModel(
-          description: _descriptionText,
+          description: modelList[i].body,
           link: _link,
           hashtag: _hashtag,
+          pagename: "Facebook App",
           reacations: _reactionCounts,
           comments: _comments,
           shares: _shares);
 
-      tempList.add(CustomCard(model));
+      tempList.add(GestureDetector(
+          onTap: () {
+            Get.to(DetailedPage(model));
+          },
+          child: CustomCard(model)));
     }
     _cards = tempList;
   }
