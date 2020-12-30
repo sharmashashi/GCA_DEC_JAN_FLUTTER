@@ -29,6 +29,7 @@ dependencies:
   firebase_core: ^0.5.1
   google_sign_in: ^4.5.5
   firebase_auth: ^0.18.3
+  firebase_messaging: ^7.0.3
   flutter:
     sdk: flutter
 
