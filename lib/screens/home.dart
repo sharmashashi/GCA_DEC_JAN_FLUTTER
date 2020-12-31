@@ -1,9 +1,9 @@
-import 'dart:convert';
+import 'dart:io';
 
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart';
+import 'package:path_provider/path_provider.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -11,82 +11,97 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  @override
-  void initState() {
-    _configureFcm();
-    super.initState();
-  }
-
+  TextEditingController fieldController = TextEditingController();
+  String fileName = "sample.txt";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Center(
-            child: Padding(
-      padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          MaterialButton(
-            elevation: 4,
-            color: Colors.white,
-            onPressed: () {
-              _sendNotification();
-            },
-            child: Text("Send test notification"),
-          )
-        ],
+      appBar: AppBar(
+        title: Text("File Handling"),
       ),
-    )));
-  }
-
-  _sendNotification() async {
-    await Future.delayed(Duration(seconds: 5));
-    String serverToken =
-        "AAAAFmJQQLA:APA91bHaCvXwdTApcA4HSqAR3OUrIwAOJu0IHEU0h5gGYPsZakOsVifqkAhHSBHdAY_OTpj-ofX0ohso5LICyZxczHWnELzz8qy5Yqv-yWr3kTAHgaV28MF7wEeA5n5bKhE_qMKy9Dqw";
-    FirebaseMessaging fcm = FirebaseMessaging();
-    String url = 'https://fcm.googleapis.com/fcm/send';
-
-    Map<String, String> header = <String, String>{
-      'Content-Type': 'application/json',
-      'Authorization': 'key=$serverToken',
-    };
-
-    await post(
-      url,
-      headers: header,
-      body: jsonEncode(
-        <String, dynamic>{
-          'notification': <String, dynamic>{
-            'body': 'this is a body',
-            'title': 'this is a title'
-          },
-          'priority': 'high',
-          'data': <String, dynamic>{
-            'click_action': 'FLUTTER_NOTIFICATION_CLICK',
-            'id': '1',
-            'status': 'done'
-          },
-          'to': await fcm.getToken(),
-        },
-      ),
+      body: _body(),
     );
   }
 
-  _configureFcm() async {
-    FirebaseMessaging fcm = FirebaseMessaging();
-    String deviceToken = await fcm.getToken();
-    print(deviceToken);
-
-    fcm.configure(onMessage: (message) {
-      _handleOnMessage(message);
-    }, onResume: (message) {
-      print(message);
-    });
+  Widget _body() {
+    return Column(
+      children: [_field(), _saveBtn(), _readBtn(), _saveImage(), _readImage()],
+    );
   }
 
-  _handleOnMessage(Map message) {
-    Get.dialog(AlertDialog(
-        title: Text(message['notification']['title']),
-        content: Text(message.toString())));
+  Widget _saveImage() {
+    return RaisedButton(
+      onPressed: () {
+        String imagePath = "assets/facebook.png";
+        // rootBundle.load(imagePth)
+        // File("").write
+      },
+      child: Text("Save image as a file"),
+    );
+  }
+
+  Widget _readImage() {
+    return RaisedButton(
+      onPressed: () {},
+      child: Text("read image from a file"),
+    );
+  }
+
+  Widget _readBtn() {
+    return MaterialButton(
+      onPressed: () {
+        _fileRead();
+      },
+      minWidth: double.infinity,
+      color: Colors.purple,
+      child: Text("Read from a file"),
+    );
+  }
+
+  Widget _saveBtn() {
+    return MaterialButton(
+      minWidth: double.infinity,
+      onPressed: () {
+        _fileWrite();
+      },
+      color: Colors.green,
+      child: Text("Save as a file"),
+    );
+  }
+
+  _fileWrite() async {
+    Directory directory = await getApplicationDocumentsDirectory();
+    listFiles(directory);
+    String filePath = directory.path + "/" + fileName;
+    String fileData = fieldController.text;
+    print("writing into file........\n");
+    File file = File(filePath);
+    file.writeAsStringSync(fileData);
+
+    print("finished writing.....");
+    listFiles(directory);
+  }
+
+  listFiles(Directory directory) {
+    List<FileSystemEntity> fseList = directory.listSync();
+    for (FileSystemEntity each in fseList) {
+      print(each.path);
+    }
+  }
+
+  _fileRead() {
+    String filePath =
+        "/data/user/0/com.example.fluttergca/app_flutter/sample.txt";
+    String readText = File(filePath).readAsStringSync();
+    File(filePath).readAsString().asStream().listen((event) {
+      print(event);
+    });
+    // print(readText);
+  }
+
+  Widget _field() {
+    return TextField(
+      controller: fieldController,
+    );
   }
 }
