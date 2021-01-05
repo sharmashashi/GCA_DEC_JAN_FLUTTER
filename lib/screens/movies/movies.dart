@@ -11,18 +11,21 @@ class Movies extends StatelessWidget {
   Orientation orientation = Orientation.portrait;
   final MoviesController moviesController = MoviesController();
 
-  final List<String> _categoryList = ["Popular", "Trending", "Recent","Upcoming"];
+  final List<String> _categoryList = [
+    "Popular",
+    "Trending",
+    "Recent",
+    "Upcoming",
+    "4K"
+  ];
   @override
   Widget build(BuildContext context) {
     return OrientationBuilder(
       builder: (context, orientation) {
         this.orientation = orientation;
-        return Scaffold(
-          backgroundColor: CustomColors.background,
-          body: orientation == Orientation.portrait
-              ? _portraitView()
-              : _landscapeView(),
-        );
+        return orientation == Orientation.portrait
+            ? _portraitView()
+            : _landscapeView();
       },
     );
   }
@@ -85,28 +88,31 @@ class Movies extends StatelessWidget {
           color: Colors.transparent,
           height: Get.height * .08,
           width: Get.width,
-          child: Row(
-            children: [
-              for (String category in _categoryList)
-                _singleTab(
-                    title: category,
-                    isSelected: moviesController.currentIndex ==
-                        _categoryList.indexOf(category),
-                    index: _categoryList.indexOf(category))
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                for (String category in _categoryList)
+                  _singleTab(
+                      title: category,
+                      isSelected: moviesController.currentIndex ==
+                          _categoryList.indexOf(category),
+                      index: _categoryList.indexOf(category))
 
-              // _singleTab(
-              //     title: "Popular",
-              //     isSelected: moviesController.currentIndex == 0,
-              //     index: 0),
-              // _singleTab(
-              //     isSelected: moviesController.currentIndex == 1,
-              //     title: "Trending",
-              //     index: 1),
-              // _singleTab(
-              //     isSelected: moviesController.currentIndex == 2,
-              //     title: "Recent",
-              //     index: 2)
-            ],
+                // _singleTab(
+                //     title: "Popular",
+                //     isSelected: moviesController.currentIndex == 0,
+                //     index: 0),
+                // _singleTab(
+                //     isSelected: moviesController.currentIndex == 1,
+                //     title: "Trending",
+                //     index: 1),
+                // _singleTab(
+                //     isSelected: moviesController.currentIndex == 2,
+                //     title: "Recent",
+                //     index: 2)
+              ],
+            ),
           )),
     );
   }
@@ -140,7 +146,7 @@ class Movies extends StatelessWidget {
       child: ListView(
         children: [
           MovieCard(),
-          SizedBox(height:10),
+          SizedBox(height: 10),
           MovieCard(),
         ],
       ),

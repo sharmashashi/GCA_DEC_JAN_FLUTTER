@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fluttergca/screens/movies/movies.dart';
+import 'package:fluttergca/screens/home/home.dart';
 import 'package:get/get.dart';
 
 void main() async {
@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Movies(),
+      home: Home(),
     );
   }
 }
