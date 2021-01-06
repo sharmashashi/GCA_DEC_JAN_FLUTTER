@@ -1,28 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:fluttergca/screens/detailed_page/detailed_page.dart';
 import 'package:get/get.dart';
 
-class TrendingCard extends StatelessWidget {
-  List<String> _genreList = ["Sci-fi", "Action", "Comedy", "Horror"];
+class CoverWithTitle extends StatelessWidget {
+  final List<String> _genreList = ["Animation", "Action", "Adventure"];
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Get.to(DetailedPage());
+    return coverWithTitle();
+  }
+
+  Widget coverWithTitle() {
+    return SizedBox(
+        height: Get.height * .25,
+        width: Get.width,
+        child: Stack(
+          children: [
+            _background(),
+            _opacity(),
+            _movieInfo(),
+          ],
+        ));
+  }
+
+  Widget _backButton() {
+    return IconButton(
+      onPressed: () {
+        Get.back();
       },
-      child: Padding(
-          padding: const EdgeInsets.only(left: 10.0),
-          child: SizedBox(
-              height: Get.height * .25,
-              width: Get.width * .8,
-              child: Stack(
-                children: [
-                  _background(),
-                  _opacity(),
-                  _movieInfo(),
-                ],
-              ))),
+      icon: Icon(
+        Icons.arrow_back_ios,
+        color: Colors.white,
+      ),
     );
   }
 
@@ -31,10 +39,12 @@ class TrendingCard extends StatelessWidget {
       opacity: 0.3,
       child: Container(
         height: Get.height * .25,
-        width: Get.width * .8,
+        width: Get.width,
         decoration: BoxDecoration(
           color: Colors.black,
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(20),
+              bottomRight: Radius.circular(20)),
         ),
       ),
     );
@@ -44,23 +54,35 @@ class TrendingCard extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
+          _backButton(),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _title(),
               SizedBox(
                 height: 10,
               ),
-              _duration(),
+              Row(
+                children: [
+                  _review(),
+                  SizedBox(width: 50),
+                  _duration(),
+                ],
+              ),
+              _genres(),
             ],
           ),
-          _genres(),
         ],
       ),
     );
+  }
+
+  Widget _review() {
+    return Text("1456 reviews", style: TextStyle(color: Colors.grey.shade300));
   }
 
   Widget _title() {
@@ -109,11 +131,12 @@ class TrendingCard extends StatelessWidget {
 
   Widget _background() {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(15),
+      borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20)),
       child: Image.asset(
         "assets/dog.jpg",
-        fit: BoxFit.fitHeight,
-        height: Get.height * .25,
+        fit: BoxFit.fitWidth,
+        width: Get.width,
       ),
     );
   }
