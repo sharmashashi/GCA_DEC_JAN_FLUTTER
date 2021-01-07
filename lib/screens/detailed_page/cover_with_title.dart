@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:fluttergca/model/listmovies.dart';
 import 'package:get/get.dart';
 
 class CoverWithTitle extends StatelessWidget {
-  final List<String> _genreList = ["Animation", "Action", "Adventure"];
+  final Movie movie;
+  CoverWithTitle(this.movie);
 
   @override
   Widget build(BuildContext context) {
@@ -82,25 +84,26 @@ class CoverWithTitle extends StatelessWidget {
   }
 
   Widget _review() {
-    return Text("1456 reviews", style: TextStyle(color: Colors.grey.shade300));
+    return Text("no reviews", style: TextStyle(color: Colors.grey.shade300));
   }
 
   Widget _title() {
     return RichText(
       text: TextSpan(
-          text: "How to Traing Your Dragon: The Hidden World",
+          text: movie.titleEnglish,
           style: TextStyle(
               color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
           children: [
             TextSpan(
-                text: "(2019)",
+                text: "(${movie.year})",
                 style: TextStyle(color: Colors.grey.shade300, fontSize: 14))
           ]),
     );
   }
 
   Widget _duration() {
-    return Text("1h 44min", style: TextStyle(color: Colors.grey.shade300));
+    return Text("${movie.runtime} min",
+        style: TextStyle(color: Colors.grey.shade300));
   }
 
   Widget _genres() {
@@ -111,7 +114,7 @@ class CoverWithTitle extends StatelessWidget {
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
-          children: [for (String genre in _genreList) _eachGenre(genre)],
+          children: [for (String genre in movie.genres) _eachGenre(genre)],
         ),
       ),
     );
@@ -133,8 +136,8 @@ class CoverWithTitle extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20)),
-      child: Image.asset(
-        "assets/dog.jpg",
+      child: Image.network(
+        movie.backgroundImageOriginal,
         fit: BoxFit.fitWidth,
         width: Get.width,
       ),

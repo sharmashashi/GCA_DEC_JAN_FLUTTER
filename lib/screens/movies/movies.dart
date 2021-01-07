@@ -12,11 +12,12 @@ class Movies extends StatelessWidget {
   final MoviesController moviesController = MoviesController();
 
   final List<String> _categoryList = [
-    "Popular",
-    "Trending",
-    "Recent",
-    "Upcoming",
-    "4K"
+    "Action",
+    "Adventure",
+    "Animation",
+    "Biography",
+    "Comedy",
+    "Crime"
   ];
   @override
   Widget build(BuildContext context) {
@@ -140,15 +141,14 @@ class Movies extends StatelessWidget {
   }
 
   Widget _body() {
-    return SizedBox(
-      height: Get.height * .8 - MediaQuery.of(Get.context).padding.top,
-      width: Get.width,
-      child: ListView(
-        children: [
-          MovieCard(),
-          SizedBox(height: 10),
-          MovieCard(),
-        ],
+    return GetBuilder(
+      init: moviesController,
+      builder: (_) => SizedBox(
+        height: Get.height * .8 - MediaQuery.of(Get.context).padding.top,
+        width: Get.width,
+        child: ListView(
+          children: moviesController.movieList,
+        ),
       ),
     );
   }

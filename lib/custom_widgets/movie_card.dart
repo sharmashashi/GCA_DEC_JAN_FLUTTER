@@ -1,21 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:fluttergca/model/listmovies.dart';
+import 'package:fluttergca/screens/detailed_page/detailed_page.dart';
 import 'package:fluttergca/utils/custom_color.dart';
 import 'package:get/get.dart';
 
 class MovieCard extends StatelessWidget {
-  List<String> _genreList = ["Sci-fi", "Action", "Comedy", "Horror"];
+  final Movie movie;
+  MovieCard(this.movie);
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      // margin: EdgeInsets.symmetric(horizontal: Get.width * .05),
-      height: Get.height * .30,
-      width: Get.width * .9,
-      // color: Colors.blue,
-      child: Stack(
-        children: [
-          Positioned(left: Get.width * .05, bottom: 0, child: _bottomCard()),
-          Positioned(left: Get.width * .05, child: _movieCover()),
-        ],
+    return GestureDetector(
+      onTap: () {
+        Get.to(DetailedPage(movie));
+      },
+      child: Container(
+        margin: EdgeInsets.only(bottom: 20),
+        height: Get.height * .30,
+        width: Get.width * .9,
+        // color: Colors.blue,
+        child: Stack(
+          children: [
+            Positioned(left: Get.width * .05, bottom: 0, child: _bottomCard()),
+            Positioned(left: Get.width * .05, child: _movieCover()),
+          ],
+        ),
       ),
     );
   }
@@ -50,7 +59,7 @@ class MovieCard extends StatelessWidget {
   }
 
   Widget _title() {
-    return Text("Avengers : End Game",
+    return Text(movie.titleEnglish,
         style: TextStyle(
             color: CustomColors.primaryBlue,
             fontSize: 20,
@@ -64,11 +73,11 @@ class MovieCard extends StatelessWidget {
           Icons.star,
           color: CustomColors.orange,
         ),
-        Text("8.7/10 IMDb"),
+        Text("${movie.rating}/10 IMDb"),
         SizedBox(
           width: 10,
         ),
-        Text("3h 2min")
+        Text("${movie.runtime} min")
       ],
     );
   }
@@ -81,7 +90,7 @@ class MovieCard extends StatelessWidget {
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
-          children: [for (String genre in _genreList) _eachGenre(genre)],
+          children: [for (String genre in movie.genres) _eachGenre(genre)],
         ),
       ),
     );
@@ -103,7 +112,7 @@ class MovieCard extends StatelessWidget {
   Widget _movieCover() {
     return ClipRRect(
       borderRadius: BorderRadius.circular(15),
-      child: Image.asset("assets/dog.jpg",
+      child: Image.network(movie.mediumCoverImage,
           height: Get.height * .25,
           fit: BoxFit.fitHeight,
           width: Get.width * .3),

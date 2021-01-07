@@ -4,7 +4,7 @@ import 'package:fluttergca/screens/trending/trending.dart';
 import 'package:get/state_manager.dart';
 
 class HomeController extends GetxController {
-  int navbarIndex = 1;
+  int navbarIndex = 0;
 
   onNavbarItemTap(int index) {
     navbarIndex = index;
