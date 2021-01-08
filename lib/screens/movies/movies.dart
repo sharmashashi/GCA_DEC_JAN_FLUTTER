@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttergca/custom_widgets/movie_card.dart';
 import 'package:fluttergca/custom_widgets/search_bar.dart';
 import 'package:fluttergca/screens/movies/movies_controller.dart';
 import 'package:fluttergca/utils/custom_color.dart';
@@ -9,18 +8,11 @@ import 'package:get/get.dart';
 // ignore: must_be_immutable
 class Movies extends StatelessWidget {
   Orientation orientation = Orientation.portrait;
-  final MoviesController moviesController = MoviesController();
+  MoviesController moviesController;
 
-  final List<String> _categoryList = [
-    "Action",
-    "Adventure",
-    "Animation",
-    "Biography",
-    "Comedy",
-    "Crime"
-  ];
   @override
   Widget build(BuildContext context) {
+    moviesController = MoviesController();
     return OrientationBuilder(
       builder: (context, orientation) {
         this.orientation = orientation;
@@ -32,14 +24,28 @@ class Movies extends StatelessWidget {
   }
 
   Widget _portraitView() {
-    return Column(
-      children: [
-        SizedBox(
-          height: MediaQuery.of(Get.context).padding.top,
-        ),
-        _appbar(),
-        _body()
-      ],
+    return SizedBox(
+      height: Get.height,
+      width: Get.width,
+      child: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(
+                  height: MediaQuery.of(Get.context).padding.top,
+                ),
+                _appbar(),
+                _body()
+              ],
+            ),
+          ),
+          Positioned(
+              top: 10 + (MediaQuery.of(Get.context).padding.top),
+              right: Get.width * .05,
+              child: _searchBar()),
+        ],
+      ),
     );
   }
 
@@ -72,14 +78,13 @@ class Movies extends StatelessWidget {
                 shape: BoxShape.circle),
           ),
         ),
-        Positioned(top: 10, right: 0, child: _searchBar()),
         Positioned(bottom: 0, child: _categoryTabs())
       ],
     );
   }
 
   Widget _searchBar() {
-    return SearchBar();
+    return SearchBar(searchBarWidth: Get.width * .9);
   }
 
   Widget _categoryTabs() {
@@ -93,12 +98,12 @@ class Movies extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             child: Row(
               children: [
-                for (String category in _categoryList)
+                for (String category in moviesController.categoryList)
                   _singleTab(
                       title: category,
                       isSelected: moviesController.currentIndex ==
-                          _categoryList.indexOf(category),
-                      index: _categoryList.indexOf(category))
+                          moviesController.categoryList.indexOf(category),
+                      index: moviesController.categoryList.indexOf(category))
 
                 // _singleTab(
                 //     title: "Popular",

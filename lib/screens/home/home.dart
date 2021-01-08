@@ -10,6 +10,7 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       extendBody: true,
       bottomNavigationBar: _bottomNavBar(),
       body: _body(),

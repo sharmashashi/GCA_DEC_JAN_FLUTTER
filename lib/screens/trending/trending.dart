@@ -261,6 +261,8 @@ class Trending extends StatelessWidget {
   }
 
   Widget _searchBar() {
-    return SearchBar();
+    return SearchBar(
+      searchBarWidth: Get.width*.8
+    );
   }
 }

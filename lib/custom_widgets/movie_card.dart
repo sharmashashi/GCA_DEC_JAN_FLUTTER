@@ -59,11 +59,14 @@ class MovieCard extends StatelessWidget {
   }
 
   Widget _title() {
-    return Text(movie.titleEnglish,
-        style: TextStyle(
-            color: CustomColors.primaryBlue,
-            fontSize: 20,
-            fontWeight: FontWeight.bold));
+    return SizedBox(
+      width: Get.width * .5,
+      child: Text(movie.titleEnglish,
+          style: TextStyle(
+              color: CustomColors.primaryBlue,
+              fontSize: 20,
+              fontWeight: FontWeight.bold)),
+    );
   }
 
   Widget _ratingDuration() {
