@@ -1,28 +1,47 @@
 import 'package:flutter/material.dart';
+import 'package:fluttergca/model/listmovies.dart' as lm;
 import 'package:fluttergca/screens/detailed_page/detailed_page.dart';
 import 'package:get/get.dart';
 
 class TrendingCard extends StatelessWidget {
-  List<String> _genreList = ["Sci-fi", "Action", "Comedy", "Horror"];
-
+  final bool isInProgress;
+  final lm.Movie movieModel;
+  TrendingCard({@required this.isInProgress, this.movieModel});
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // Get.to(DetailedPage());
+        if (isInProgress == false) {
+          Get.to(DetailedPage(movieModel));
+        }
       },
       child: Padding(
           padding: const EdgeInsets.only(left: 10.0),
           child: SizedBox(
               height: Get.height * .25,
               width: Get.width * .8,
-              child: Stack(
-                children: [
-                  _background(),
-                  _opacity(),
-                  _movieInfo(),
-                ],
-              ))),
+              child: isInProgress == true
+                  ? Container(
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.shade300,
+                            offset: Offset(1, 1),
+                            blurRadius: 2,
+                            spreadRadius: 0.5,
+                          )
+                        ],
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Center(child: CircularProgressIndicator()))
+                  : Stack(
+                      children: [
+                        _background(),
+                        _opacity(),
+                        _movieInfo(),
+                      ],
+                    ))),
     );
   }
 
@@ -66,19 +85,20 @@ class TrendingCard extends StatelessWidget {
   Widget _title() {
     return RichText(
       text: TextSpan(
-          text: "How to Traing Your Dragon: The Hidden World",
+          text: movieModel.titleEnglish,
           style: TextStyle(
               color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
           children: [
             TextSpan(
-                text: "(2019)",
+                text: "(${movieModel.year})",
                 style: TextStyle(color: Colors.grey.shade300, fontSize: 14))
           ]),
     );
   }
 
   Widget _duration() {
-    return Text("1h 44min", style: TextStyle(color: Colors.grey.shade300));
+    return Text("${movieModel.runtime} min",
+        style: TextStyle(color: Colors.grey.shade300));
   }
 
   Widget _genres() {
@@ -89,7 +109,7 @@ class TrendingCard extends StatelessWidget {
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
-          children: [for (String genre in _genreList) _eachGenre(genre)],
+          children: [for (String genre in movieModel.genres) _eachGenre(genre)],
         ),
       ),
     );
@@ -110,10 +130,10 @@ class TrendingCard extends StatelessWidget {
   Widget _background() {
     return ClipRRect(
       borderRadius: BorderRadius.circular(15),
-      child: Image.asset(
-        "assets/dog.jpg",
-        fit: BoxFit.fitHeight,
-        height: Get.height * .25,
+      child: Image.network(
+        movieModel.mediumCoverImage,
+        fit: BoxFit.fitWidth,
+        width: Get.width * .8,
       ),
     );
   }

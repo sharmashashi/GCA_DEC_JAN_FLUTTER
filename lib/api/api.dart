@@ -44,4 +44,24 @@ class Api {
     //  ListMovies model =  ListMovies.fromJson(response.body);
     return MovieDetails.fromJson(response.body);
   }
+
+  static Future<ListMovies> trendingMovies() async {
+    String url =
+        "https://yts.mx/api/v2/list_movies.json?limit=5&sort_by=download_count";
+
+    http.Response response = await http.get(url);
+
+    //  ListMovies model =  ListMovies.fromJson(response.body);
+    return ListMovies.fromJson(response.body);
+  }
+
+  static Future<ListMovies> recentMovies() async {
+    String url =
+        "https://yts.mx/api/v2/list_movies.json?limit=50&sort_by=year";
+
+    http.Response response = await http.get(url);
+
+    //  ListMovies model =  ListMovies.fromJson(response.body);
+    return ListMovies.fromJson(response.body);
+  }
 }

@@ -7,11 +7,53 @@ import 'package:fluttergca/utils/custom_color.dart';
 import 'package:get/get.dart';
 
 class DetailedPage extends StatelessWidget {
+  DetailedPageController detailedPageController;
   final Movie movie;
   DetailedPage(this.movie);
   @override
   Widget build(BuildContext context) {
-    return Material(child: _body());
+    detailedPageController = DetailedPageController(movie.id);
+    return Scaffold(
+      body: _body(),
+      floatingActionButton: _floatingBtn(),
+    );
+  }
+
+  Widget _floatingBtn() {
+    return FloatingActionButton(
+      onPressed: () {
+        Get.dialog(_downloadDialog());
+      },
+      child: Icon(Icons.file_download, color: Colors.white),
+      backgroundColor: Colors.green.shade800,
+    );
+  }
+
+  Widget _downloadDialog() {
+    return SimpleDialog(
+      contentPadding: EdgeInsets.all(10),
+      title: Text("Download your movie"),
+      children: [for (var each in movie.torrents) _eachTorrentDownloader(each)],
+    );
+  }
+
+  Widget _eachTorrentDownloader(Torrent torrent) {
+    TextStyle style =
+        TextStyle(color: Colors.green, fontWeight: FontWeight.bold);
+    return MaterialButton(
+        minWidth: double.infinity,
+        onPressed: () {
+          detailedPageController.downloadTorrent(movie.title, torrent.url);
+        },
+        color: Colors.white,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text("${torrent.quality}, ", style: style),
+            SizedBox(width: 10),
+            Text(torrent.size, style: style)
+          ],
+        ));
   }
 
   Widget _body() {
@@ -35,7 +77,7 @@ class DetailedPage extends StatelessWidget {
 
   Widget _fullCast() {
     return GetBuilder(
-      init: DetailedPageController(movie.id),
+      init: detailedPageController,
       builder: (controller) => Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(

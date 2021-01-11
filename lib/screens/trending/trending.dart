@@ -1,52 +1,71 @@
 import 'package:flutter/material.dart';
 import 'package:fluttergca/custom_widgets/search_bar.dart';
-import 'package:fluttergca/custom_widgets/trending_card.dart';
+import 'package:fluttergca/model/listmovies.dart';
+import 'package:fluttergca/screens/detailed_page/detailed_page.dart';
+import 'package:fluttergca/screens/trending/trendingcontroller.dart';
 import 'package:fluttergca/utils/custom_color.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
 class Trending extends StatelessWidget {
+  final TrendingController trendingController = TrendingController();
+
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    return SizedBox(
+      height: Get.height,
+      width: Get.width,
+      child: Stack(
         children: [
-          SizedBox(
-            height: MediaQuery.of(context).padding.top,
-          ),
-          SizedBox(
-            height: Get.height * .43,
-            width: Get.width,
-            child: Stack(
+          SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _appbar(),
-                Positioned(bottom: 0, child: _topTrendings()),
+                SizedBox(
+                  height: MediaQuery.of(context).padding.top,
+                ),
+                SizedBox(
+                  height: Get.height * .43,
+                  width: Get.width,
+                  child: Stack(
+                    children: [
+                      _appbar(),
+                      Positioned(bottom: 0, child: _topTrendings()),
+                    ],
+                  ),
+                ),
+                _category(),
+                _recent(),
+                SizedBox(height: Get.height * .4)
               ],
             ),
           ),
-          _category(),
-          _recent(),
-          SizedBox(height: Get.height * .4)
+          Positioned(
+              left: Get.width * .05,
+              top: MediaQuery.of(Get.context).padding.top,
+              child: _searchBar())
         ],
       ),
     );
   }
 
   Widget _recent() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text("Recent",
-              style: TextStyle(
-                  color: CustomColors.primaryBlue,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold)),
-          SizedBox(height: 15),
-          _recentCards()
-        ],
+    return GetBuilder(
+      init: trendingController,
+      builder: (_) => Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Recent",
+                style: TextStyle(
+                    color: CustomColors.primaryBlue,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold)),
+            SizedBox(height: 15),
+            _recentCards()
+          ],
+        ),
       ),
     );
   }
@@ -58,44 +77,47 @@ class Trending extends StatelessWidget {
         direction: Axis.horizontal,
         alignment: WrapAlignment.start,
         spacing: 20,
-        children: [
-          _recentCard(),
-          _recentCard(),
-          _recentCard(),
-          _recentCard(),
-          _recentCard(),
-          _recentCard(),
-          _recentCard(),
-          _recentCard(),
-          _recentCard(),
-        ],
+        children: trendingController.recentList.length == 0
+            ? [LinearProgressIndicator()]
+            : [
+                for (Movie each in trendingController.recentList)
+                  _recentCard(each)
+              ],
       ),
     );
   }
 
-  Widget _recentCard() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(
-          width: Get.width * .4,
-          height: Get.height * .35,
-          child: ClipRRect(
-              borderRadius: BorderRadius.circular(15),
-              child: Image.asset(
-                "assets/dog.jpg",
-                fit: BoxFit.fitHeight,
-              )),
-        ),
-        SizedBox(
-          height: 15,
-        ),
-        Text("Toy Story",
-            style: TextStyle(
-                color: CustomColors.primaryBlue,
-                fontSize: 18,
-                fontWeight: FontWeight.bold)),
-      ],
+  Widget _recentCard(Movie movie) {
+    return GestureDetector(
+      onTap: () {
+        Get.to(DetailedPage(movie));
+      },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: Get.width * .4,
+            height: Get.height * .35,
+            child: ClipRRect(
+                borderRadius: BorderRadius.circular(15),
+                child: Image.network(
+                  movie.mediumCoverImage,
+                  fit: BoxFit.fitHeight,
+                )),
+          ),
+          SizedBox(
+            height: 15,
+          ),
+          SizedBox(
+            width: Get.width * .4,
+            child: Text(movie.titleEnglish,
+                style: TextStyle(
+                    color: CustomColors.primaryBlue,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold)),
+          ),
+        ],
+      ),
     );
   }
 
@@ -185,20 +207,17 @@ class Trending extends StatelessWidget {
   }
 
   Widget _topTrendings() {
-    return Container(
-      height: Get.height * .25,
-      width: Get.width,
-      color: Colors.transparent,
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: [
-            TrendingCard(),
-            TrendingCard(),
-            TrendingCard(),
-            TrendingCard(),
-            TrendingCard(),
-          ],
+    return GetBuilder(
+      init: trendingController,
+      builder: (controller) => Container(
+        height: Get.height * .25,
+        width: Get.width,
+        color: Colors.transparent,
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: controller.trendingList,
+          ),
         ),
       ),
     );
@@ -230,20 +249,20 @@ class Trending extends StatelessWidget {
           ),
         ),
         Positioned(
-            top: 10,
-            right: 0,
+            top: Get.height * .08,
+            left: 8,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    Icon(
-                      Icons.arrow_back_ios,
-                      color: Colors.white,
-                    ),
-                    _searchBar(),
-                  ],
-                ),
+                // Row(
+                //   children: [
+                //     Icon(
+                //       Icons.arrow_back_ios,
+                //       color: Colors.white,
+                //     ),
+                //     _searchBar(),
+                //   ],
+                // ),
                 SizedBox(
                   height: 20,
                 ),
@@ -261,8 +280,6 @@ class Trending extends StatelessWidget {
   }
 
   Widget _searchBar() {
-    return SearchBar(
-      searchBarWidth: Get.width*.8
-    );
+    return SearchBar(searchBarWidth: Get.width * .9);
   }
 }

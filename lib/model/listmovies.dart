@@ -221,7 +221,7 @@ class Torrent {
 
   final String url;
   final String hash;
-  final Quality quality;
+  final String quality;
   final Type type;
   final int seeds;
   final int peers;
@@ -237,7 +237,7 @@ class Torrent {
   factory Torrent.fromMap(Map<String, dynamic> json) => Torrent(
         url: json["url"],
         hash: json["hash"],
-        quality: qualityValues.map[json["quality"]],
+        quality: json["quality"],
         type: typeValues.map[json["type"]],
         seeds: json["seeds"],
         peers: json["peers"],
@@ -250,7 +250,7 @@ class Torrent {
   Map<String, dynamic> toMap() => {
         "url": url,
         "hash": hash,
-        "quality": qualityValues.reverse[quality],
+        "quality": quality,
         "type": typeValues.reverse[type],
         "seeds": seeds,
         "peers": peers,
@@ -261,10 +261,9 @@ class Torrent {
       };
 }
 
-enum Quality { THE_720_P, THE_1080_P }
 
-final qualityValues =
-    EnumValues({"1080p": Quality.THE_1080_P, "720p": Quality.THE_720_P});
+// final qualityValues =
+//     EnumValues({"1080p": Quality.THE_1080_P, "720p": Quality.THE_720_P});
 
 enum Type { BLURAY, WEB }
 

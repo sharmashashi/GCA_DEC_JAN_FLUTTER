@@ -137,7 +137,7 @@ class CoverWithTitle extends StatelessWidget {
       borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20)),
       child: Image.network(
-        movie.backgroundImageOriginal,
+        movie.mediumCoverImage,
         fit: BoxFit.fitWidth,
         width: Get.width,
       ),
