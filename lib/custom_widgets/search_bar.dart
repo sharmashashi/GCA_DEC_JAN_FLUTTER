@@ -100,7 +100,9 @@ class SearchBar extends StatelessWidget {
   Widget _bar() {
     return SizedBox(
       width: searchBarWidth,
-      child: TextField(
+      child: TextFormField(
+        
+        validator: (val) {},
         onChanged: (value) {
           searchBarController.onChanged(value);
         },
