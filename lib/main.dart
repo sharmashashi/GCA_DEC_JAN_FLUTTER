@@ -1,11 +1,21 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:fluttergca/screens/home.dart';
+import 'package:fluttergca/screens/home/home.dart';
+import 'package:get/get.dart';
 
-void main() {
-  runApp(MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: HomePage(),
-  ));
+void main() async {
+  // WidgetsFlutterBinding.ensureInitialized();
+  // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+  //     statusBarColor: Colors.blue, systemNavigationBarColor: Colors.blue));
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    
+    return GetMaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Home(),
+    );
+  }
 }
